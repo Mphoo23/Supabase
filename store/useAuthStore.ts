@@ -46,4 +46,5 @@ const { data: profile } = await supabase
 set({ role: profile?.role || null });
 }
 });
-},));
+},
+}));
