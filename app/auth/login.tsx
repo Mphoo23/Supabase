@@ -1,8 +1,8 @@
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/store/useAuthStore';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Button, TextInput, View } from 'react-native';
+import { Alert, Button, Pressable, Text, TextInput, View } from 'react-native';
 export default function LoginScreen() {
 const router = useRouter();
 const [email, setEmail] = useState('');
@@ -45,6 +45,15 @@ onChangeText={setPassword}
 style={{ borderWidth: 1, padding: 10, marginBottom: 20 }}
 />
 <Button title={loading ? "Logging in ." : "Log In"} onPress={handleLogin} />
+
+<Link href="/auth/signup" asChild>
+<Pressable style={{ marginTop: 20 }}>
+<Text style={{ color: '#16a8e3', textAlign: 'center' }}>
+Don't have an account? Sign Up
+</Text>
+</Pressable>
+</Link>
 </View>
 )
+
 }
