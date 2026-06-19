@@ -9,6 +9,7 @@ role: string | null;
 // Renters vs Owners
 isLoading: boolean;            
 // Are we checking the server right now?
+setSession: (session: Session | null) => void;
 initialize: () => Promise<void>;
 signOut: () => Promise<void>;
 }
@@ -17,6 +18,11 @@ session: null,
 user: null,
 role: null,
 isLoading: true, // We start as 'loading' until we check Supabase
+ setSession: (session) =>
+    set({
+      session,
+      user: session?.user ?? null,
+    }),
 // Helpers to update variables
 signOut: async () => {
 await supabase.auth.signOut();
