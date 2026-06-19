@@ -1,12 +1,14 @@
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useAuthStore } from '@/store/useAuthStore';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
 import '../global.css';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import { ActivityIndicator, View } from 'react-native';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -17,9 +19,19 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
 
-  return (
+  const { initialize, isLoading } = useAuthStore()
+  const colorScheme = useColorScheme();
+useEffect(() => {
+initialize();
+}, [])
+if (isLoading) {
+return (
+<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+<ActivityIndicator size="large" />
+</View>
+)}
+return (
     <QueryClientProvider client={queryClient}>
       <GluestackUIProvider mode="light">
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
