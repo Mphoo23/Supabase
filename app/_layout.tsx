@@ -1,7 +1,7 @@
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAuthStore } from '@/store/useAuthStore';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
@@ -20,11 +20,27 @@ export const unstable_settings = {
 
 export default function RootLayout() {
 
-  const { initialize, isLoading } = useAuthStore()
+  const { initialize, isLoading , session } = useAuthStore()
   const colorScheme = useColorScheme();
+  const segments = useSegments(); 
+const router = useRouter(); 
 useEffect(() => {
 initialize();
-}, [])
+}, []);
+
+useEffect(() => {
+  if (isLoading) return;
+
+  const inAuthGroup = segments[0] === 'auth';
+
+  if (!session && !inAuthGroup) {
+    router.replace('/auth/login');
+  }
+
+  if (session && (inAuthGroup || segments[0] === undefined)) {
+    router.replace('../(protected)');
+  }
+}, [session, isLoading, segments]);
 if (isLoading) {
 return (
 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
